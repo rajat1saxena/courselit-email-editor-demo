@@ -37,20 +37,14 @@ export default function Home() {
     }
 
     const renderEmail = async () => {
-        console.log('Export button clicked');
-        console.log('Current email state:', email);
-        
         if (!email) {
             console.log('No email content available');
             return;
         }
 
         try {
-            console.log('Generating HTML...');
             const html = await renderEmailToHtml({email, blocks});
-            console.log('HTML generated:', html);
             setGeneratedHtml(html);
-            console.log('Setting dialog to show');
             setShowDialog(true);
         } catch (error) {
             console.error('Error generating HTML:', error);
@@ -64,7 +58,7 @@ export default function Home() {
                     <h1 className="text-2xl font-semibold">Email Editor</h1>
                     <div className="flex items-center gap-1 text-sm text-gray-600">
                         <span>by</span>
-                        <a href="https://courselit.app" className="text-blue-600 hover:text-blue-800">CourseLit</a>
+                        <a href="https://courselit.app" target="_blank" rel="noopener noreferrer" className="font-medium underline hover:text-blue-800">CourseLit</a>
                     </div>
                 </div>
                 <Button 

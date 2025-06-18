@@ -1,2 +1,1 @@
-overrides:
-  '@courselit/email-editor': link:../../.local/share/pnpm/global/5/node_modules/@courselit/email-editor
+# This file is intentionally empty to remove the override
