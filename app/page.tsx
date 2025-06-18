@@ -5,21 +5,37 @@ import { EmailEditor, renderEmailToHtml } from "@courselit/email-editor";
 import type { Email } from "@courselit/email-editor";
 import { Text, Link, Separator } from "@courselit/email-editor/blocks";
 // import "@courselit/email-editor/styles.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Copy, Code, Rocket } from "lucide-react";
+import { Copy, Code, Rocket, Star, Github } from "lucide-react";
 
 export default function Home() {
     const [email, setEmail] = useState<Email | null>(null);
     const [showDialog, setShowDialog] = useState(false);
     const [generatedHtml, setGeneratedHtml] = useState("");
     const [copySuccess, setCopySuccess] = useState(false);
+    const [githubStars, setGithubStars] = useState<number | null>(null);
     const blocks = [Text, Link, Separator];
+
+    useEffect(() => {
+        // Fetch GitHub stars for the CourseLit repository
+        const fetchGithubStars = async () => {
+            try {
+                const response = await fetch('https://api.github.com/repos/codelitdev/courselit');
+                const data = await response.json();
+                setGithubStars(data.stargazers_count);
+            } catch (error) {
+                console.error('Failed to fetch GitHub stars:', error);
+            }
+        };
+
+        fetchGithubStars();
+    }, []);
 
     const handleChange = (email: Email) => {
         console.log('Email content changed:', email);
@@ -61,14 +77,29 @@ export default function Home() {
                         <a href="https://courselit.app" target="_blank" rel="noopener noreferrer" className="font-medium underline hover:text-blue-800">CourseLit</a>
                     </div>
                 </div>
-                <Button 
-                    onClick={renderEmail} 
-                    className="self-center"
-                    disabled={!email}
-                >
-                    <Code className="w-4 h-4 mr-1" />
-                    Export HTML
-                </Button>
+                <div className="flex items-center gap-3">
+                    <a
+                        href="https://github.com/codelitdev/courselit"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 font-medium text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 rounded px-2 py-1 focus:outline-none"
+                    >
+                        <Github className="w-4 h-4" />
+                        {githubStars !== null 
+                          ? githubStars < 1000 
+                            ? githubStars.toLocaleString() 
+                            : `${(githubStars / 1000).toFixed(1)}k`
+                          : '...'}
+                    </a>
+                    <Button 
+                        onClick={renderEmail} 
+                        className="self-center"
+                        disabled={!email}
+                    >
+                        <Code className="w-4 h-4 mr-1" />
+                        Export HTML
+                    </Button>
+                </div>
             </div>
             <div className="flex-1 overflow-y-auto">
                 <EmailEditor 
